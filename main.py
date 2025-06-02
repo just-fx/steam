@@ -77,7 +77,7 @@ def main():
         time.sleep(SLEEP_TIME)
 
     duration = time.time() - start_time
-    size_mb = os.path.getsize(OUTPUT_FILE) / (1024**2)
+    size_mb = os.path.getsize(JSONL_FILE) / (1024**2)
     log.info(f"Scraping completed in {duration / 60:.2f} minutes. Size: {size_mb:.2f} MB")
 
 
