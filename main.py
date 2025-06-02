@@ -17,6 +17,7 @@ JSONL_FILE = f"{OUTPUT_DIR}/json/steam_data_{today}.jsonl"
 LOG_DIR = "/home/ec2-user/logs"
 LOG_FILE = f"/home/ec2-user/logs/steam_scraper_{today}.log"
 SLEEP_TIME = 1
+MAX_RETRIES = 5
 
 logging.basicConfig(filename=LOG_FILE, level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 log = logging.getLogger()
@@ -69,7 +70,7 @@ def main():
 
     for i, app_id in enumerate(app_ids):
         log.info(f"Processing app {i + 1}/{len(app_ids)}: {app_id}")
-        details = get_app_details(app_id)
+        details = get_app_details(app_id, max_retries=MAX_RETRIES)
         if details:
             with open(JSONL_FILE, "a", encoding="utf-8") as f:
                 f.write(json.dumps(details) + "\n")
@@ -77,7 +78,7 @@ def main():
         time.sleep(SLEEP_TIME)
 
     duration = time.time() - start_time
-    size_mb = os.path.getsize(OUTPUT_FILE) / (1024**2)
+    size_mb = os.path.getsize(JSONL_FILE) / (1024**2)
     log.info(f"Scraping completed in {duration / 60:.2f} minutes. Size: {size_mb:.2f} MB")
 
 
