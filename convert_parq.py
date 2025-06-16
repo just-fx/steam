@@ -30,14 +30,23 @@ def main():
     # Make sure target directory exists
     PARQUET_DIR.mkdir(parents=True, exist_ok=True)
 
-    # Get all JSONL files that match the naming pattern
+    # Get all JSONL files
     jsonl_files = sorted(JSON_DIR.glob("steam_data_*.jsonl"))
 
     if not jsonl_files:
         logger.warning("No JSONL files found to process.")
         return
 
-    for jsonl_file in jsonl_files:
+    # Filter only files that haven't been converted yet
+    files_to_process = [
+        f for f in jsonl_files if not (PARQUET_DIR / f"{f.stem}.parquet").exists()
+    ]
+
+    if not files_to_process:
+        logger.info("All JSONL files have already been converted. Exiting.")
+        return
+
+    for jsonl_file in files_to_process:
         target_file = PARQUET_DIR / f"{jsonl_file.stem}.parquet"
         convert_json(jsonl_file, target_file)
 
