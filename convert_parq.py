@@ -16,7 +16,7 @@ logger = logging.getLogger()
 
 def convert_json(source: Path, target: Path):
     try:
-        with pd.read_json(source, lines=True, chunksize=10000) as reader:
+        with pd.read_json(source, lines=True) as reader:
             for i, chunk in enumerate(reader):
                 if not target.exists() or i == 0:
                     chunk.to_parquet(target, engine='fastparquet')
