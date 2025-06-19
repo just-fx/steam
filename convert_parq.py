@@ -17,13 +17,13 @@ logger = logging.getLogger()
 def convert_json(source: Path, target: Path):
     try:
         first_chunk = True
-        with pd.read_json(source, lines=True, chunksize=10000) as reader:
+        with pd.read_json(source, lines=True, chunksize=30000) as reader:
             for chunk in reader:
                 chunk.to_parquet(
                     target,
                     engine='fastparquet',
                     append=not first_chunk,
-                    compression='snappy',  # Optional: helps reduce file size
+                    compression='snappy',
                 )
                 first_chunk = False
         logger.info(f"Successfully converted {source.name} to {target.name}")
