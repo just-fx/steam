@@ -16,15 +16,20 @@ logger = logging.getLogger()
 
 def convert_json(source: Path, target: Path):
     try:
-        with pd.read_json(source, lines=True) as reader:
-            for i, chunk in enumerate(reader):
-                if not target.exists() or i == 0:
-                    chunk.to_parquet(target, engine='fastparquet')
-                else:
-                    chunk.to_parquet(target, engine='fastparquet', append=True)
+        first_chunk = True
+        with pd.read_json(source, lines=True, chunksize=10000) as reader:
+            for chunk in reader:
+                chunk.to_parquet(
+                    target,
+                    engine='fastparquet',
+                    append=not first_chunk,
+                    compression='snappy',  # Optional: helps reduce file size
+                )
+                first_chunk = False
         logger.info(f"Successfully converted {source.name} to {target.name}")
     except Exception as e:
-        logger.error(f"Error processing {source.name}: {e}")
+        logger.error(f"Error processing {source.name}: {e}", exc_info=True)
+
 
 def main():
     # Make sure target directory exists
