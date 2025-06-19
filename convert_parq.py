@@ -17,8 +17,10 @@ logger = logging.getLogger()
 def convert_json(source: Path, target: Path):
     try:
         first_chunk = True
-        with pd.read_json(source, lines=True, chunksize=30000) as reader:
-            for chunk in reader:
+        with open(source, 'rb') as f:
+            reader = pd.read_json(f, lines=True, chunksize=10000)
+            for i, chunk in enumerate(reader):
+                logger.info(f"Processing chunk {i+1} with {len(chunk)} rows")
                 chunk.to_parquet(
                     target,
                     engine='fastparquet',
