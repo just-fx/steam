@@ -16,7 +16,7 @@ logger = logging.getLogger()
 
 def convert_json(source: Path, target: Path):
     try:
-        ddb.sql(f"COPY (SELECT * FROM read_json({source})) TO {target} (FORMAT parquet)")
+        ddb.sql(f"COPY (SELECT * FROM read_json('{source}')) TO '{target}' (FORMAT parquet)")
         logger.info(f"Successfully converted {source.name} to {target.name}")
     except Exception as e:
         logger.error(f"Error processing {source.name}: {e}", exc_info=True)
