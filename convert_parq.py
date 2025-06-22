@@ -1,4 +1,4 @@
-import pandas as pd
+import duckdb as ddb
 import logging
 from datetime import datetime
 from pathlib import Path
@@ -16,18 +16,7 @@ logger = logging.getLogger()
 
 def convert_json(source: Path, target: Path):
     try:
-        first_chunk = True
-        with open(source, 'rb') as f:
-            reader = pd.read_json(f, lines=True, chunksize=10000)
-            for i, chunk in enumerate(reader):
-                logger.info(f"Processing chunk {i+1} with {len(chunk)} rows")
-                chunk.to_parquet(
-                    target,
-                    engine='fastparquet',
-                    append=not first_chunk,
-                    compression='snappy',
-                )
-                first_chunk = False
+        ddb.sql(f"COPY (SELECT * FROM read_json({source})) TO {target} (FORMAT parquet)")
         logger.info(f"Successfully converted {source.name} to {target.name}")
     except Exception as e:
         logger.error(f"Error processing {source.name}: {e}", exc_info=True)
