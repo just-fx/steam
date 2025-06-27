@@ -6,6 +6,7 @@ services:
       - "4040:4040"
     volumes:
       - ./data:/home/jovyan/data
+      - .:/home/jovyan
     environment:
       - JUPYTER_ENABLE_LAB=yes
-
+      - JUPYTER_RUNTIME_DIR=/tmp/jupyter-runtime
