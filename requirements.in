@@ -4,3 +4,4 @@ python-dotenv
 pyarrow
 fastparquet
 datetime
+boto3

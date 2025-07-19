@@ -4,18 +4,30 @@
 #
 #    pip-compile requirements.in
 #
+boto3==1.39.9
+    # via -r requirements.in
+botocore==1.39.9
+    # via
+    #   boto3
+    #   s3transfer
 certifi==2025.4.26
     # via requests
 charset-normalizer==3.4.2
     # via requests
 cramjam==2.10.0
     # via fastparquet
+datetime==5.5
+    # via -r requirements.in
 fastparquet==2024.11.0
     # via -r requirements.in
 fsspec==2025.5.1
     # via fastparquet
 idna==3.10
     # via requests
+jmespath==1.0.1
+    # via
+    #   boto3
+    #   botocore
 numpy==2.0.2
     # via
     #   fastparquet
@@ -29,16 +41,29 @@ pandas==2.2.3
 pyarrow==20.0.0
     # via -r requirements.in
 python-dateutil==2.9.0.post0
-    # via pandas
+    # via
+    #   botocore
+    #   pandas
 python-dotenv==1.1.0
     # via -r requirements.in
 pytz==2025.2
-    # via pandas
+    # via
+    #   datetime
+    #   pandas
 requests==2.32.3
     # via -r requirements.in
+s3transfer==0.13.1
+    # via boto3
 six==1.17.0
     # via python-dateutil
 tzdata==2025.2
     # via pandas
 urllib3==2.4.0
-    # via requests
+    # via
+    #   botocore
+    #   requests
+zope-interface==7.2
+    # via datetime
+
+# The following packages are considered to be unsafe in a requirements file:
+# setuptools
