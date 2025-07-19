@@ -6,6 +6,7 @@ from requests.exceptions import HTTPError
 import logging
 from datetime import datetime
 import os
+import boto3
 
 
 today = datetime.today().strftime("%Y-%m-%d")
@@ -16,6 +17,7 @@ OUTPUT_DIR = "/home/ec2-user/data"
 JSONL_FILE = f"{OUTPUT_DIR}/json/steam_data_{today}.jsonl"
 LOG_DIR = "/home/ec2-user/logs"
 LOG_FILE = f"/home/ec2-user/logs/steam_scraper_{today}.log"
+S3_BUCKET = "dlsu-steam-data-bucket"
 SLEEP_TIME = 1
 MAX_RETRIES = 5
 
@@ -80,6 +82,10 @@ def main():
     duration = time.time() - start_time
     size_mb = os.path.getsize(JSONL_FILE) / (1024**2)
     log.info(f"Scraping completed in {duration / 60:.2f} minutes. Size: {size_mb:.2f} MB")
+
+    log.info(f"Uploading jsonl to s3 bucket {S3_BUCKET}")
+    s3 = boto3.client("s3")
+    s3.upload_file(JSONL_FILE, S3_BUCKET, JSONL_FILE)
 
 
 if __name__ == "__main__":
